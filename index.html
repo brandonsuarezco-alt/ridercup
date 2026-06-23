@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rider Cup 2026 · BMW Motorrad Autogermana</title>
+<!-- Preload GIF para que llegue antes de que el loader lo necesite -->
+<link rel="preload" as="image" href="uploads/rider-cup-banner.gif">
+<link rel="stylesheet" href="_ds/bmw-motorrad-brand-design-9253c3a2-9fb0-4cb4-af45-f21aff249d3f/fonts/bmw-motorrad.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#f4f4f4;color:#111;font-family:'BMW Motorrad',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* BANNER */
+.banner{position:relative;width:100%;background:#000;line-height:0}
+.banner img{width:100%;height:auto;display:block}
+.banner-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05) 40%,rgba(0,0,0,.75) 100%);pointer-events:none}
+.banner-title{position:absolute;bottom:0;left:0;right:0;padding:22px 40px 30px;display:flex;flex-direction:column;gap:5px}
+.banner-eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.banner-h{font-size:clamp(44px,7vw,88px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.88;color:#fff}
+.banner-h em{color:#1C69D4;font-style:normal}
+.banner-sub{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:2px}
+
+/* FILTERBAR */
+.filterbar{position:sticky;top:0;z-index:100;background:#EBEBEB;border-bottom:2px solid #1C69D4;box-shadow:0 4px 18px rgba(0,0,0,.1);padding:18px 40px}
+.filterbar-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fl{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#777}
+.segs{display:flex;gap:3px;background:rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.1);border-radius:8px;padding:4px;flex-wrap:wrap}
+.seg-b{font-family:'BMW Motorrad',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#555;background:none;border:none;padding:9px 20px;border-radius:5px;cursor:pointer;transition:background .14s,color .14s;white-space:nowrap}
+.seg-b.on{background:#1C69D4;color:#fff;box-shadow:0 2px 10px rgba(28,105,212,.4)}
+.seg-b:not(.on):hover{background:rgba(28,105,212,.1);color:#1C69D4}
+.srch-wrap{position:relative}
+.srch-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#aaa;pointer-events:none}
+.srch{font-family:'BMW Motorrad',system-ui,sans-serif;font-size:13px;font-weight:600;color:#111;background:#fff;border:1px solid #CCC;border-radius:8px;padding:10px 14px 10px 36px;outline:none;min-width:230px;height:44px;transition:border-color .14s}
+.srch:focus{border-color:#1C69D4}
+.srch::placeholder{color:#aaa}
+.period-group{transition:opacity .2s}
+.period-group.hidden{opacity:.3;pointer-events:none}
+
+/* FILTER SCROLL HINT */
+.filter-hint{display:none;position:absolute;right:0;top:0;bottom:0;width:48px;align-items:center;justify-content:flex-end;padding-right:10px;background:linear-gradient(to right,transparent,#EBEBEB 55%);pointer-events:none}
+.filter-hint svg{width:22px;height:22px;color:#1C69D4}
+
+/* CONTENT */
+.content{padding:32px 40px 72px;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:32px}
+
+/* STICKY TABLE HEADER — fuera de la card, sin overflow padre */
+.sticky-thead{
+  position:sticky;
+  top:var(--fbar-h,80px);
+  z-index:20;
+  background:linear-gradient(135deg,#0A46A0 0%,#1460CC 100%);
+  border-radius:10px 10px 0 0;
+  overflow-x:auto;
+  scrollbar-width:none;
+  margin-bottom:0;
+  padding:0 26px;/* igual que .clasi-card */
+}
+.sticky-thead::-webkit-scrollbar{display:none}
+.sticky-thead .t-head-row{
+  position:static;
+  border-radius:10px 10px 0 0;
+  background:transparent;
+  margin-bottom:0;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  padding:10px 0;/* sin padding lateral — lo da .sticky-thead */
+}
+
+/* CARD sin overflow y sin radio superior cuando hay header sticky */
+.clasi-card{
+  background:linear-gradient(150deg,#1056B8 0%,#1B72E8 60%,#1668D8 100%);
+  border-radius:0 0 18px 18px;
+  padding:16px 26px 24px;
+}
+.clasi-card .t-row{padding:10px 0;/* sin padding lateral — lo da la card */}
+.clasi-card.no-head{border-radius:18px;padding:30px 26px 24px}
+.clasi-hd{margin-bottom:24px}
+.clasi-title{font-size:clamp(36px,5vw,60px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.9;color:#fff}
+.clasi-sub{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:7px}
+
+/* TABLE */
+.t-head-row{display:grid;gap:5px;align-items:center;background:rgba(0,0,18,.55);border-radius:8px 8px 0 0;padding:10px 12px;margin-bottom:0;position:sticky;top:var(--fbar-h,80px);z-index:10;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.1)}
+.ch{font-size:9.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.ch.r{text-align:right}
+.t-row{display:grid;gap:5px;align-items:center;background:rgba(255,255,255,.07);border-radius:9px;padding:10px 12px;margin-bottom:3px;transition:background .15s}
+.t-row:hover{background:rgba(255,255,255,.13)}
+.t-row.r1{background:rgba(200,146,10,.22)}
+.t-row.r2{background:rgba(160,160,175,.15)}
+.t-row.r3{background:rgba(160,100,40,.14)}
+.rnk{width:38px;height:38px;border-radius:8px;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;flex:none}
+.r1 .rnk{background:rgba(200,146,10,.85);font-size:16px}
+.r2 .rnk{background:rgba(155,155,170,.7)}
+.r3 .rnk{background:rgba(160,95,35,.7)}
+.name-wrap{display:flex;flex-direction:column;gap:3px;min-width:0;overflow:hidden}
+.name-main{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#fff;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25;word-break:break-word}
+.name-vit{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mon-pill{background:rgba(255,255,255,.13);border-radius:6px;padding:6px 3px;text-align:center;font-size:14px;font-weight:700;color:#fff}
+.mon-pill.empty{background:transparent;color:rgba(255,255,255,.15);font-size:11px}
+.tot-pill{background:rgba(255,255,255,.24);border-radius:6px;padding:7px 4px;text-align:center;font-size:16px;font-weight:900;color:#fff}
+.ipu-pill{background:rgba(255,255,255,.18);border-radius:6px;padding:7px 8px;text-align:right;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
+.units-pill{background:rgba(255,255,255,.13);border-radius:6px;padding:7px 4px;text-align:center;font-size:14px;font-weight:700;color:#fff}
+.empty-msg{padding:44px 20px;text-align:center;color:rgba(255,255,255,.4);font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+/* SECTION LABEL */
+.section-lbl{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#1C69D4;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-lbl::before{content:'';width:24px;height:2px;background:#1C69D4;flex:none}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .9s ease,visibility .9s ease}
+#loader.out{opacity:0;visibility:hidden;pointer-events:none}
+.loader-gif{position:absolute;inset:0;overflow:hidden}
+.loader-gif img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:.55;filter:brightness(.7)}
+.loader-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 50% 50%,transparent 30%,rgba(0,0,0,.7) 100%)}
+.loader-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;padding:0 32px;width:100%;max-width:600px}
+/* BMW Motorrad logo negative */
+.bmw-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:4px}
+.bmw-wordmark{font-size:11px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+/* Title */
+.loader-title{font-size:clamp(52px,10vw,110px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.88;color:#fff}
+.loader-title em{color:#1C69D4;font-style:normal}
+/* Countdown */
+.loader-timer{display:flex;flex-direction:column;align-items:center;gap:4px}
+.loader-timer .secs{font-size:clamp(36px,6vw,56px);font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.loader-timer .lbl{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+/* Bar */
+.loader-bar-wrap{width:min(380px,72vw);height:2px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.loader-bar{height:100%;background:#1C69D4;border-radius:2px;width:0%;transition:width .5s linear}
+/* Status */
+.loader-status{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:10px}
+.loader-dot{width:5px;height:5px;border-radius:50%;background:#1C69D4;animation:ldp 1.4s infinite ease-in-out}
+@keyframes ldp{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.3)}}
+
+/* FOOTER */
+.site-footer{border-top:1px solid #E0E0E0;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:#fff}
+.footer-brand{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#111}
+.footer-brand em{color:#1C69D4;font-style:normal}
+.footer-meta{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#aaa}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .filterbar{padding:16px 24px}
+  .filterbar-inner{gap:14px}
+  .content{padding:24px 24px 56px}
+  .seg-b{font-size:12px;padding:8px 16px}
+}
+@media(max-width:640px){
+  .banner-title{display:none}
+  .filter-hint{display:flex}
+  .filterbar{padding:10px 14px 12px}
+  .filterbar-inner{flex-wrap:nowrap;overflow-x:auto;gap:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .filterbar-inner::-webkit-scrollbar{display:none}
+  .fg{flex:none}
+  .fl{font-size:9px}
+  .seg-b{font-size:11.5px;padding:8px 13px}
+  .srch{min-width:170px;height:40px;font-size:12px}
+  .srch-icon{left:10px}
+  .content{padding:14px 10px 48px;gap:14px}
+  .section-lbl{font-size:10px;margin-bottom:8px}
+  .clasi-card{padding:18px 12px 14px;border-radius:12px}
+  .clasi-title{font-size:clamp(28px,8vw,44px)}
+  .clasi-sub{font-size:10px;margin-top:5px}
+  .clasi-hd{margin-bottom:14px}
+  #asGrid,#vitGrid{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .sticky-thead{overflow-x:auto}
+  .t-head-row,.t-row{min-width:380px}
+  .rnk{width:30px;height:30px;font-size:11px;border-radius:5px}
+  .name-main{font-size:10px;letter-spacing:.02em}
+  .name-vit{font-size:8px}
+  .mon-pill,.units-pill{font-size:11px;padding:4px 2px}
+  .tot-pill{font-size:12px;padding:5px 2px}
+  .ipu-pill{font-size:10px;padding:4px 5px}
+  .t-head-row{padding:8px}
+  .t-row{padding:8px}
+  .ch{font-size:8px}
+  .site-footer{padding:14px 16px;flex-direction:column;align-items:flex-start;gap:5px}
+  .footer-meta{text-align:left}
+}
+@media(max-width:380px){
+  .seg-b{font-size:10.5px;padding:7px 11px}
+  .clasi-title{font-size:26px}
+  .t-head-row,.t-row{min-width:320px}
+  .t-head-row{top:var(--fbar-h,70px)}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0A0F1A"/><stop offset="60%" stop-color="#0D1E35"/><stop offset="100%" stop-color="#000"/></linearGradient><radialGradient id="sun" cx="70%" cy="38%" r="25%"><stop offset="0%" stop-color="#1C69D4" stop-opacity=".35"/><stop offset="100%" stop-color="#1C69D4" stop-opacity="0"/></radialGradient><linearGradient id="rd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1C69D4" stop-opacity=".5"/><stop offset="100%" stop-color="#1C69D4" stop-opacity="0"/></linearGradient></defs><rect width="120" height="80" fill="url(#sky)"/><ellipse cx="84" cy="30" rx="40" ry="28" fill="url(#sun)"/><polygon points="0,55 15,30 28,45 42,22 58,40 70,28 85,42 100,18 115,35 120,30 120,80 0,80" fill="#0D1C2E"/><polygon points="0,80 0,58 20,42 38,60 55,38 72,55 88,36 105,52 120,40 120,80" fill="#060E1A"/><rect x="52" y="62" width="16" height="18" fill="url(#rd)"/><rect x="0" y="0" width="120" height="2" fill="#1C69D4"/><circle cx="10" cy="10" r=".6" fill="white" opacity=".7"/><circle cx="25" cy="6" r=".5" fill="white" opacity=".5"/><circle cx="40" cy="12" r=".4" fill="white" opacity=".6"/><circle cx="75" cy="14" r=".5" fill="white" opacity=".7"/><circle cx="108" cy="11" r=".6" fill="white" opacity=".6"/><text x="60" y="33" font-family="sans-serif" font-size="14" font-weight="900" fill="white" text-anchor="middle">RIDER</text><text x="60" y="47" font-family="sans-serif" font-size="14" font-weight="900" fill="#1C69D4" text-anchor="middle">CUP</text><rect x="28" y="56" width="64" height="1.5" rx="1" fill="rgba(255,255,255,.08)"/><rect x="28" y="56" width="38" height="1.5" rx="1" fill="#1C69D4"/><text x="60" y="66" font-family="sans-serif" font-size="3.8" fill="rgba(255,255,255,.35)" text-anchor="middle" letter-spacing="1">ACTUALIZANDO INFORMACIÓN</text><text x="60" y="74" font-family="sans-serif" font-size="4.5" font-weight="700" fill="rgba(255,255,255,.18)" text-anchor="middle">2026</text></svg></template>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-gif">
+    <img id="bannerImg" src="uploads/rider-cup-banner.gif" alt="" aria-hidden="true">
+  </div>
+  <div class="loader-vignette"></div>
+  <div class="loader-inner">
+    <!-- BMW Motorrad wordmark -->
+    <div class="bmw-logo-wrap">
+      <div class="bmw-wordmark">BMW · Motorrad · Autogermana</div>
+    </div>
+    <!-- Título -->
+    <div class="loader-title">Rider<br><em>Cup</em></div>
+    <!-- Countdown -->
+    <div class="loader-timer">
+      <div class="secs" id="loaderCount">30</div>
+      <div class="lbl">segundos</div>
+    </div>
+    <!-- Barra -->
+    <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
+    <!-- Status -->
+    <div class="loader-status"><div class="loader-dot"></div>Actualizando información</div>
+  </div>
+</div>
+
+<!-- BANNER: clona el mismo elemento de imagen ya cargado -->
+<div class="banner">
+  <img id="bannerMain" src="uploads/rider-cup-banner.gif" alt="Rider Cup 2026" fetchpriority="high">
+  <div class="banner-overlay"></div>
+  <div class="banner-title">
+    <div class="banner-eyebrow">Autogermana · BMW Motorrad · Colombia</div>
+    <div class="banner-h">Rider <em>Cup</em></div>
+    <div class="banner-sub">Clasificación de asesores · 2026</div>
+  </div>
+</div>
+
+<!-- FILTERBAR -->
+<div class="filterbar">
+  <div class="filterbar-inner" id="filterbarInner">
+    <div class="fg">
+      <div class="fl">Clasificar por</div>
+      <div class="segs" id="sortSeg">
+        <button class="seg-b on" data-s="ventas">Nº de ventas</button>
+        <button class="seg-b" data-s="rentabilidad">Rentabilidad</button>
+      </div>
+    </div>
+    <div class="fg">
+      <div class="fl">Tipo de vitrina</div>
+      <div class="segs" id="tipoSeg">
+        <button class="seg-b on" data-t="A">Tipo A</button>
+        <button class="seg-b" data-t="B">Tipo B</button>
+      </div>
+    </div>
+    <div class="fg period-group" id="periodGroup">
+      <div class="fl">Período</div>
+      <div class="segs" id="periodSeg">
+        <button class="seg-b on" data-p="total">Total</button>
+        <button class="seg-b" data-p="1">Ene</button>
+        <button class="seg-b" data-p="2">Feb</button>
+        <button class="seg-b" data-p="3">Mar</button>
+        <button class="seg-b" data-p="4">Abr</button>
+        <button class="seg-b" data-p="5">May</button>
+      </div>
+    </div>
+    <div class="fg">
+      <div class="fl">Buscar asesor</div>
+      <div class="srch-wrap">
+        <svg class="srch-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="text" class="srch" id="qInput" placeholder="Nombre del asesor…">
+      </div>
+    </div>
+  </div>
+  <div class="filter-hint" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+</div>
+
+<main class="content">
+  <div class="table-block">
+    <div class="section-lbl">Ranking por asesor</div>
+    <div id="asHead" class="sticky-thead"></div>
+    <div class="clasi-card">
+      <div class="clasi-hd">
+        <div class="clasi-title">Clasificación</div>
+        <div class="clasi-sub" id="asSubtitle"></div>
+      </div>
+      <div id="asGrid"></div>
+    </div>
+  </div>
+  <div class="table-block">
+    <div class="section-lbl">Ranking por vitrina</div>
+    <div id="vitHead" class="sticky-thead"></div>
+    <div class="clasi-card">
+      <div class="clasi-hd">
+        <div class="clasi-title">Vitrinas</div>
+        <div class="clasi-sub" id="vitSubtitle"></div>
+      </div>
+      <div id="vitGrid"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-brand">BMW <em>Motorrad</em> · Autogermana</div>
+  <div class="footer-meta">Rider Cup 2026 · 855 facturas · 52 asesores</div>
+</footer>
+
+<script>
+/* ── LOADER ── */
+(function(){
+  const loader=document.getElementById('loader');
+  const bar=document.getElementById('loaderBar');
+  const countEl=document.getElementById('loaderCount');
+  const TOTAL=30;
+  let secs=TOTAL;
+  const barInt=setInterval(()=>{
+    const pct=((TOTAL-secs)/TOTAL)*100;
+    bar.style.width=Math.min(pct,97)+'%';
+  },500);
+  const tick=setInterval(()=>{
+    secs--;
+    if(countEl)countEl.textContent=Math.max(secs,0);
+    if(secs<=0){clearInterval(tick);done();}
+  },1000);
+  function done(){
+    clearInterval(barInt);
+    bar.style.width='100%';
+    setTimeout(()=>{loader.classList.add('out');setTimeout(()=>loader.remove(),950);},400);
+  }
+  setTimeout(done,35000);
+})();
+
+/* ── DATA ── */
+const A=[{n:"EDISON ALEXANDER RODRIGUEZ PRIETO",u:46,r:3229803478,t:"A",v:"BMW_PLAZA",m:{1:4,2:13,3:10,4:10,5:9}},{n:"JORGE EDUARDO AGUDELO URIBE",u:27,r:2524411998,t:"A",v:"MED1BMW",m:{1:2,2:7,3:5,4:9,5:4}},{n:"CRISTHIAN CAMILO HERRERA ROJAS",u:38,r:2382003552,t:"A",v:"BMW_PLAZA",m:{1:7,2:8,3:7,4:10,5:6}},{n:"MARILUZ CIFUENTES VALENCIA",u:34,r:2262151000,t:"B",v:"PER1BO",m:{1:3,2:13,3:4,4:8,5:6}},{n:"DANIEL ALEJANDRO PACHON RODRIGUEZ",u:33,r:2106943329,t:"A",v:"BMW_PLAZA",m:{1:4,2:10,3:9,4:5,5:5}},{n:"JULIO ROBERTO ROJAS GUZMAN",u:33,r:1929914128,t:"A",v:"BMW_PLAZA",m:{1:4,2:7,3:8,4:5,5:9}},{n:"EVERTH FERNANDO ARELLANO LOPEZ",u:25,r:1811994142,t:"A",v:"BMW_PLAZA",m:{2:10,3:5,4:5,5:5}},{n:"BRAYAN ENRIQUE ANGARITA TRIANA",u:24,r:1751252311,t:"B",v:"BUC1",m:{1:3,2:6,3:6,4:4,5:5}},{n:"ESTEBAN HURTADO MUÑOZ",u:23,r:1710610550,t:"A",v:"MED1BMW",m:{1:2,2:6,3:8,4:4,5:3}},{n:"JHONATAN ALFONSO GUARIN VILLEGAS",u:21,r:1666276880,t:"A",v:"MED1BMW",m:{1:1,2:4,3:4,4:6,5:6}},{n:"JUAN PABLO VELEZ",u:19,r:1622277311,t:"B",v:"RUTA 40",m:{1:1,2:6,3:2,4:6,5:4}},{n:"ANDRES FELIPE AVELLANEDA GARZON",u:25,r:1586890553,t:"A",v:"BOGC198",m:{1:4,2:5,3:5,4:6,5:5}},{n:"NICOLAS EDUARDO CORREDOR MORENO",u:23,r:1493152880,t:"A",v:"MED1BMW",m:{1:1,2:4,3:4,4:8,5:6}},{n:"DIEGO ZAPATA",u:19,r:1440282888,t:"B",v:"RUTA 40",m:{1:3,2:3,3:4,4:7,5:2}},{n:"YISEL ALEXANDRA RODRIGUEZ ROMERO",u:25,r:1374037883,t:"A",v:"BOGC198",m:{1:3,2:6,3:7,4:5,5:4}},{n:"JAIRO ANDRES MORENO PONCE",u:22,r:1298102293,t:"B",v:"AUTOBONN",m:{1:4,2:6,3:5,4:4,5:3}},{n:"CARLOS SANMIGUEL",u:17,r:1277268908,t:"B",v:"AUTOMUNICH",m:{2:4,3:7,4:1,5:5}},{n:"JUAN SEBASTIAN VENEGAS CASTELLANOS",u:27,r:1262012409,t:"B",v:"BOGK050",m:{2:7,3:8,4:4,5:8}},{n:"FRANCISCO JAVIER GORDILLO SANTANA",u:21,r:1255600123,t:"A",v:"BOGC198",m:{1:4,2:5,3:3,4:3,5:6}},{n:"FRANCISCO MIRANDA RUEDA",u:19,r:1205458331,t:"A",v:"MED1BMW",m:{2:1,3:6,4:7,5:5}},{n:"DIANA PAOLA MARROQUIN IBARRA",u:20,r:1067689338,t:"B",v:"CHI1FTN",m:{2:6,3:3,4:7,5:4}},{n:"CRISTHIAN FERLEY TORO PACHECO",u:19,r:1067505840,t:"B",v:"IBA1",m:{1:2,2:5,3:6,4:2,5:4}},{n:"JHONATAN ACOSTA",u:17,r:1037210835,t:"B",v:"RUTA 40",m:{1:2,2:2,3:4,4:2,5:7}},{n:"DIANA MARCELA CUESTA REYES",u:17,r:1008450187,t:"B",v:"BOTBS",m:{1:3,2:1,3:8,4:2,5:3}},{n:"JULIAN NIETO ATEHORTUA",u:16,r:971208918,t:"A",v:"MED1BMW",m:{1:1,2:5,3:1,4:6,5:3}},{n:"RONALD STIVEN FLORES BARRERA",u:23,r:956257919,t:"B",v:"CHI1FTN",m:{1:5,2:4,3:5,4:5,5:4}},{n:"MATEO CIFUENTES NIETO",u:13,r:955136502,t:"B",v:"PER1BO",m:{1:2,2:3,3:3,4:3,5:2}},{n:"JUAN CARLOS RESTREPO",u:14,r:947699691,t:"B",v:"BOTBS",m:{1:1,2:6,4:4,5:3}},{n:"JUAN DAVID ESPINOSA SALAZAR",u:16,r:920916787,t:"B",v:"IBA1",m:{2:8,3:2,4:3,5:3}},{n:"YEISON AUGUSTO SOLANO GALVIS",u:16,r:917714912,t:"B",v:"BUC1",m:{1:1,3:3,4:9,5:3}},{n:"JOSE RONALDO RODRIGUEZ SUAREZ",u:17,r:823730110,t:"A",v:"BOGC198",m:{1:1,3:5,4:6,5:5}},{n:"CÉSAR AUGUSTO BONILLA CAMACHO",u:20,r:782693186,t:"B",v:"BOGK050",m:{1:2,2:4,4:8,5:6}},{n:"MARIA ALEJANDRA MONTOYA YEPES",u:12,r:671735736,t:"B",v:"AUTOBONN",m:{1:1,2:4,3:4,4:3}},{n:"MIGUEL ANGEL CORTES PINEDA",u:9,r:650046346,t:"A",v:"BMW_PLAZA",m:{1:3,2:6}},{n:"JUAN JOSE FALLA GUTIERREZ",u:9,r:645450772,t:"A",v:"BMW_PLAZA",m:{1:3,2:5,3:1}},{n:"MICHELL ALEJANDRA FORERO SERNA",u:9,r:591361345,t:"B",v:"AUTOBONN",m:{1:1,2:2,3:4,4:1,5:1}},{n:"CAMILO FERNANDO ESCOBAR GOMEZ",u:9,r:527713112,t:"A",v:"BMW_PLAZA",m:{1:2,2:3,3:2,5:2}},{n:"GIUSSEPPE NAVARRO",u:8,r:482705882,t:"B",v:"AUTOMUNICH",m:{2:1,3:3,4:1,5:3}},{n:"SEBASTIAN VASCO RUIZ",u:6,r:428693858,t:"A",v:"MED1BMW",m:{5:6}},{n:"ALVARO GUEVARA ZULUAGA",u:7,r:419983193,t:"B",v:"AUTOBONN",m:{3:2,4:2,5:3}},{n:"JUAN DIEGO PIRAGUA SOLANO",u:11,r:419861102,t:"A",v:"BMW_PLAZA",m:{4:1,5:10}},{n:"MARTIN MAURICIO SIERRA BORDA",u:3,r:179510442,t:"A",v:"BMW_PLAZA",m:{1:1,4:1,5:1}},{n:"ALEXIS LOZADA CULMA",u:3,r:159842520,t:"B",v:"IBA1",m:{2:1,3:1,4:1}},{n:"STEVEN VELÁSQUEZ PATIÑO",u:3,r:159152606,t:"A",v:"MED1BMW",m:{1:1,5:2}},{n:"JUAN DAVID VILLAMIL ORTIZ",u:2,r:140540094,t:"A",v:"BOGC198",m:{5:2}},{n:"MARCELA JOHANA MELENDEZ MARTINEZ",u:1,r:98425197,t:"B",v:"BUC1",m:{3:1}},{n:"JUAN DAVID OSORNO GOMEZ",u:2,r:82383316,t:"B",v:"PER1BO",m:{1:1,5:1}},{n:"JOHANA MILENA HOLGUIN MEDINA",u:1,r:80434783,t:"B",v:"BUC1",m:{1:1}},{n:"CARLOS ANDRES VILLATE BALLEN",u:2,r:64173228,t:"A",v:"BOGC198",m:{3:1,4:1}},{n:"LAURA TATIANA CASTAÑO CUERVO",u:1,r:45669291,t:"B",v:"PER1BO",m:{3:1}}];
+
+const MS=[1,2,3,4,5];
+const ML={1:"ENE.",2:"FEB.",3:"MAR.",4:"ABR.",5:"MAY."};
+const MF={1:"Enero",2:"Febrero",3:"Marzo",4:"Abril",5:"Mayo"};
+const TL={A:"Vitrinas Tipo A",B:"Vitrinas Tipo B"};
+const st={s:'ventas',t:'A',p:'total',q:''};
+
+const fmt=n=>'$'+Math.round(n/1e6).toLocaleString('es-CO')+' M';
+const mV=(a,m)=>a.m[m]||0;
+const sc=a=>st.s==='rentabilidad'?a.r:st.p==='total'?a.u:mV(a,+st.p);
+const rC=i=>i===0?'t-row r1':i===1?'t-row r2':i===2?'t-row r3':'t-row';
+
+function aCols(){
+  if(st.s==='rentabilidad')return '40px minmax(110px,1fr) 66px 120px';
+  if(st.p==='total')return '40px minmax(100px,1fr) 46px 46px 46px 46px 46px 64px';
+  return '40px minmax(120px,1fr) 80px';
+}
+const vCols='40px minmax(100px,1fr) 56px 64px 120px';
+
+function aList(){
+  return A.filter(a=>a.t===st.t&&(!st.q||a.n.toLowerCase().includes(st.q.toLowerCase()))&&sc(a)>0)
+          .sort((a,b)=>sc(b)-sc(a));
+}
+
+function vStats(){
+  const map={};
+  A.filter(a=>a.t===st.t).forEach(a=>{
+    if(!map[a.v])map[a.v]={name:a.v,t:a.t,ad:0,u:0,r:0,m:{}};
+    const v=map[a.v];v.ad++;v.u+=a.u;v.r+=a.r;
+    MS.forEach(m=>{v.m[m]=(v.m[m]||0)+mV(a,m);});
+  });
+  return Object.values(map);
+}
+const vSc=v=>st.s==='rentabilidad'?v.r:st.p==='total'?v.u:v.m[+st.p]||0;
+
+function renderA(){
+  const iT=st.p==='total',iR=st.s==='rentabilidad';
+  const list=aList(),cols=aCols();
+  const pTxt=iR?'':'· '+(iT?'Ene – May':MF[+st.p]);
+  document.getElementById('asSubtitle').textContent=`${TL[st.t]} · ${iR?'Rentabilidad (ingreso total)':'Número de ventas'} ${pTxt}`;
+  if(!list.length){
+    document.getElementById('asHead').innerHTML='';
+    document.getElementById('asGrid').innerHTML='<div class="empty-msg">Sin resultados</div>';
+    return;
+  }
+  // Header separado (sticky)
+  let h=`<div class="t-head-row" style="grid-template-columns:${cols}"><div class="ch"></div><div class="ch">Asesor(a)</div>`;
+  if(iR){h+=`<div class="ch r">Unid.</div><div class="ch r">Ingreso total</div>`;}
+  else if(iT){MS.forEach(m=>{h+=`<div class="ch r">${ML[m]}</div>`;});h+=`<div class="ch r">TOTAL</div>`;}
+  else{h+=`<div class="ch r">${ML[+st.p]}</div>`;}
+  h+='</div>';
+  document.getElementById('asHead').innerHTML=h;
+  // Solo filas
+  document.getElementById('asGrid').innerHTML=list.map((a,i)=>{
+    let c='';
+    if(iR){c=`<div class="units-pill">${a.u}</div><div class="ipu-pill">${fmt(a.r)}</div>`;}
+    else if(iT){MS.forEach(m=>{const v=mV(a,m);c+=`<div class="${v?'mon-pill':'mon-pill empty'}">${v||'·'}</div>`;});c+=`<div class="tot-pill">${a.u}</div>`;}
+    else{c=`<div class="tot-pill">${mV(a,+st.p)}</div>`;}
+    return `<div class="${rC(i)}" style="grid-template-columns:${cols}"><div><div class="rnk">${i+1}</div></div><div class="name-wrap"><div class="name-main">${a.n}</div><div class="name-vit">${a.v}</div></div>${c}</div>`;
+  }).join('');
+}
+
+function renderV(){
+  const iR=st.s==='rentabilidad',iT=st.p==='total';
+  const list=vStats().sort((a,b)=>vSc(b)-vSc(a));
+  document.getElementById('vitSubtitle').textContent=`${TL[st.t]} · ${iR?'Rentabilidad (ingreso total)':'Número de ventas'} ${iR?'':iT?'· Ene – May':'· '+MF[+st.p]}`;
+  if(!list.length){
+    document.getElementById('vitHead').innerHTML='';
+    document.getElementById('vitGrid').innerHTML='<div class="empty-msg">Sin resultados</div>';
+    return;
+  }
+  const sl=iR?'Ingreso total':iT?'TOTAL':ML[+st.p];
+  document.getElementById('vitHead').innerHTML=`<div class="t-head-row" style="grid-template-columns:${vCols}"><div class="ch"></div><div class="ch">Vitrina</div><div class="ch r">Asesores</div><div class="ch r">Unidades</div><div class="ch r">${sl}</div></div>`;
+  document.getElementById('vitGrid').innerHTML=list.map((v,i)=>{
+    const sv=iR?fmt(v.r):iT?v.u:v.m[+st.p]||0;
+    const uv=iR?v.u:iT?v.u:v.m[+st.p]||0;
+    return `<div class="${rC(i)}" style="grid-template-columns:${vCols}"><div><div class="rnk">${i+1}</div></div><div class="name-wrap"><div class="name-main">${v.name}</div><div class="name-vit">Tipo ${v.t}</div></div><div class="units-pill">${v.ad}</div><div class="units-pill">${uv}</div><div class="ipu-pill">${sv}</div></div>`;
+  }).join('');
+}
+
+function render(){
+  document.getElementById('periodGroup').classList.toggle('hidden',st.s==='rentabilidad');
+  renderA();renderV();
+}
+
+/* Events — delegación única por contenedor */
+document.getElementById('sortSeg').addEventListener('click',e=>{
+  const b=e.target.closest('[data-s]');if(!b)return;
+  st.s=b.dataset.s;
+  document.querySelectorAll('#sortSeg .seg-b').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+document.getElementById('tipoSeg').addEventListener('click',e=>{
+  const b=e.target.closest('[data-t]');if(!b)return;
+  st.t=b.dataset.t;
+  document.querySelectorAll('#tipoSeg .seg-b').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+document.getElementById('periodSeg').addEventListener('click',e=>{
+  const b=e.target.closest('[data-p]');if(!b)return;
+  st.p=b.dataset.p;
+  document.querySelectorAll('#periodSeg .seg-b').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+let qt;
+document.getElementById('qInput').addEventListener('input',e=>{
+  clearTimeout(qt);qt=setTimeout(()=>{st.q=e.target.value;render();},180);
+});
+
+/* Sticky header offset = altura real del filterbar */
+function setFbarH(){
+  const h=document.querySelector('.filterbar').offsetHeight;
+  document.documentElement.style.setProperty('--fbar-h',h+'px');
+}
+window.addEventListener('resize',setFbarH);
+setFbarH();
+
+/* Sync horizontal scroll: header sigue al grid */
+function syncScroll(headId,gridId){
+  const head=document.getElementById(headId);
+  const grid=document.getElementById(gridId);
+  if(!head||!grid)return;
+  grid.addEventListener('scroll',()=>{head.scrollLeft=grid.scrollLeft;},{passive:true});
+  head.addEventListener('scroll',()=>{grid.scrollLeft=head.scrollLeft;},{passive:true});
+}
+syncScroll('asHead','asGrid');
+syncScroll('vitHead','vitGrid');
+
+/* Renderizar tras el primer frame visible */
+requestAnimationFrame(()=>requestAnimationFrame(render));
+</script>
+</body>
+</html>
